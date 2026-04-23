@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+
+    --background: 36 50% 97%;
+    --foreground: 150 30% 15%;
+    --card: 36 40% 95%;
+    --card-foreground: 150 30% 15%;
+    --popover: 36 50% 97%;
+    --popover-foreground: 150 30% 15%;
+    --primary: 150 30% 15%;
+    --primary-foreground: 36 50% 97%;
+    --secondary: 36 30% 92%;
+    --secondary-foreground: 150 30% 15%;
+    --muted: 36 20% 93%;
+    --muted-foreground: 150 10% 40%;
+    --accent: 16 60% 59%;
+    --accent-foreground: 36 50% 97%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 36 20% 85%;
+    --input: 36 20% 85%;
+    --ring: 150 30% 15%;
+    --chart-1: 16 60% 59%;
+    --chart-2: 150 30% 30%;
+    --chart-3: 45 70% 55%;
+    --chart-4: 36 40% 70%;
+    --chart-5: 16 40% 45%;
+    --radius: 0.5rem;
+
+    --highlight: 45 80% 62%;
+
+    --sidebar-background: 150 30% 15%;
+    --sidebar-foreground: 36 50% 97%;
+    --sidebar-primary: 16 60% 59%;
+    --sidebar-primary-foreground: 36 50% 97%;
+    --sidebar-accent: 150 25% 22%;
+    --sidebar-accent-foreground: 36 50% 97%;
+    --sidebar-border: 150 20% 25%;
+    --sidebar-ring: 16 60% 59%;
+  }
+
+  .dark {
+    --background: 150 25% 8%;
+    --foreground: 36 50% 95%;
+    --card: 150 20% 12%;
+    --card-foreground: 36 50% 95%;
+    --popover: 150 25% 8%;
+    --popover-foreground: 36 50% 95%;
+    --primary: 36 50% 95%;
+    --primary-foreground: 150 25% 8%;
+    --secondary: 150 15% 16%;
+    --secondary-foreground: 36 50% 95%;
+    --muted: 150 10% 18%;
+    --muted-foreground: 36 15% 65%;
+    --accent: 16 60% 59%;
+    --accent-foreground: 36 50% 97%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 150 10% 20%;
+    --input: 150 10% 20%;
+    --ring: 36 50% 95%;
+    --chart-1: 16 60% 59%;
+    --chart-2: 150 30% 50%;
+    --chart-3: 45 70% 55%;
+    --chart-4: 36 40% 50%;
+    --chart-5: 16 40% 45%;
+    --sidebar-background: 150 30% 6%;
+    --sidebar-foreground: 36 50% 95%;
+    --sidebar-primary: 16 60% 59%;
+    --sidebar-primary-foreground: 36 50% 97%;
+    --sidebar-accent: 150 20% 12%;
+    --sidebar-accent-foreground: 36 50% 95%;
+    --sidebar-border: 150 15% 14%;
+    --sidebar-ring: 16 60% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}

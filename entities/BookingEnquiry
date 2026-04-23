@@ -1,0 +1,53 @@
+{
+  "name": "BookingEnquiry",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Guest's full name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "WhatsApp or phone number"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "Accommodation",
+        "Event",
+        "Day Visit",
+        "Catering",
+        "Just exploring"
+      ],
+      "description": "What brings them to Genesis"
+    },
+    "preferred_date": {
+      "type": "string",
+      "description": "Preferred date or date range"
+    },
+    "guest_count": {
+      "type": "string",
+      "description": "Approximate number of guests"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or requests"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "confirmed",
+        "completed"
+      ],
+      "default": "new",
+      "description": "Enquiry status"
+    }
+  },
+  "required": [
+    "name",
+    "phone",
+    "purpose"
+  ]
+}
