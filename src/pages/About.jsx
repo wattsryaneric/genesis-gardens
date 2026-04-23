@@ -41,11 +41,11 @@ export default function About() {
             transition={{ duration: 0.7 }}
           >
             <div className="relative overflow-hidden rounded-3xl">
-              <img
-                src="https://media.base44.com/images/public/69e8e722d554d6ea43e92eb8/be774f2c2_generated_ee5b54f4.png"
-                alt="Welcoming entrance to Genesis Gardens"
-                className="w-full h-72 sm:h-80 lg:h-[32rem] object-cover"
-              />
+               <img
+                 src="/images/WhatsApp-Image-2023-03-28-at-17.02.51.jpg"
+                 alt="Welcoming entrance to Genesis Gardens"
+                 className="w-full h-72 sm:h-80 lg:h-[32rem] object-cover"
+               />
             </div>
           </motion.div>
 

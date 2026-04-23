@@ -9,7 +9,7 @@ export default function HeroSection() {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src="https://media.base44.com/images/public/69e8e722d554d6ea43e92eb8/6b6bc68f2_generated_2b49d781.png"
+          src="/images/WhatsApp-Image-2023-01-08-at-12.52.32.jpg"
           alt="Lush gardens at Genesis Gardens and Campsite during golden hour"
           className="w-full h-full object-cover"
         />
