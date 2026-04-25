@@ -56,13 +56,13 @@ export default function About() {
             transition={{ duration: 0.7, delay: 0.15 }}
           >
             <p className="font-body text-base text-muted-foreground leading-relaxed mb-6">
-              Genesis Gardens and Campsite began the way the best things do — not with a business plan, but with a person who simply loved welcoming others.
+              Genesis Gardens and Campsite began the way the best things do not with a business plan, but with a person who simply loved welcoming others.
             </p>
             <p className="font-body text-base text-muted-foreground leading-relaxed mb-6">
               Vanessa Ngango has always had a gift for hospitality. The kind that makes people feel seen, comfortable, and at home the moment they walk through the door. So she did what felt natural: she opened her home, transformed her gardens, and created a space where anyone who came would feel like they truly belonged.
             </p>
             <p className="font-body text-base text-muted-foreground leading-relaxed">
-              What started as one woman's passion has grown into Mukono-Seeta's most beloved outdoor destination — but the spirit behind it has never changed. Every event we host, every meal we serve, every guest we welcome is a reflection of that original intention: to make people feel genuinely, warmly, at home.
+              What started as one woman's passion has grown into Mukono-Seeta's most beloved outdoor destination but the spirit behind it has never changed. Every event we host, every meal we serve, every guest we welcome is a reflection of that original intention: to make people feel genuinely, warmly, at home.
             </p>
           </motion.div>
         </div>
