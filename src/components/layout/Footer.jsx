@@ -40,17 +40,17 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-lg font-medium mb-4">Reach Us</h4>
             <div className="flex flex-col gap-3">
-              <a href="#" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+              <a href="https://wa.me/256777979994" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 <MessageCircle className="w-4 h-4 flex-shrink-0" />
-                WhatsApp
+                0777979994
               </a>
-              <a href="#" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+              <a href="tel:+256781200048" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                Call us
+                0781200048
               </a>
-              <a href="#" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+              <a href="mailto:reservations@genesiscampsite.ug" className="flex items-center gap-2 font-body text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">
                 <Mail className="w-4 h-4 flex-shrink-0" />
-                Email us
+                reservations@genesiscampsite.ug
               </a>
             </div>
           </div>

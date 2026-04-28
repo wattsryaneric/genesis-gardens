@@ -10,6 +10,8 @@ import Home from './pages/Home';
 import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';
+import Accommodation from './pages/Accommodation';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -37,12 +39,14 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Route>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/accommodation" element={<Accommodation />} />
+          <Route path="/contact" element={<Contact />} />
+        </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

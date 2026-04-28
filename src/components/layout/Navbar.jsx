@@ -7,6 +7,8 @@ const navLinks = [
   { label: 'Home', path: '/' },
   { label: 'Services', path: '/services' },
   { label: 'About Us', path: '/about' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Accommodation', path: '/accommodation' },
   { label: 'Contact', path: '/contact' },
 ];
 
@@ -34,8 +36,8 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-16 lg:h-20">
-        <Link to="/" className="font-heading text-xl lg:text-2xl font-semibold tracking-wide text-primary">
-          Genesis Gardens
+        <Link to="/" className="flex items-center space-x-2">
+          <img src="/images/logo_small.png" alt="Genesis Gardens Logo" className="h-16 w-auto" />
         </Link>
 
         {/* Desktop nav */}

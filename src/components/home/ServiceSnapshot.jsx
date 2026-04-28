@@ -10,6 +10,7 @@ const services = [
     image: '/images/WhatsApp-Image-2023-01-08-at-12.52.33.jpg',
     alt: 'Cozy glamping accommodation at Genesis Gardens',
     span: 'md:col-span-2 md:row-span-2',
+    link: '/accommodation',
   },
   {
     title: 'Celebrate here',
@@ -17,6 +18,7 @@ const services = [
     image: '/images/WhatsApp-Image-2023-01-08-at-13.04.06.jpg',
     alt: 'Elegant outdoor event at Genesis Gardens',
     span: 'md:col-span-2',
+    link: '/services',
   },
   {
     title: 'Come for the day',
@@ -24,6 +26,7 @@ const services = [
     image: '/images/WhatsApp-Image-2023-01-08-at-13.04.17.jpg',
     alt: 'Peaceful picnic setting in the gardens',
     span: '',
+    link: '/services',
   },
   {
     title: 'Eat well',
@@ -31,6 +34,7 @@ const services = [
     image: '/images/WhatsApp-Image-2023-01-08-at-13.04.18.jpg',
     alt: 'Vibrant East African buffet at Genesis',
     span: '',
+    link: '/services',
   },
 ];
 
@@ -67,7 +71,7 @@ export default function ServiceSnapshot() {
               transition={{ delay: i * 0.1 }}
               className={`group relative overflow-hidden rounded-2xl cursor-pointer ${service.span}`}
             >
-              <Link to="/services" className="block h-full">
+               <Link to={service.link} className="block h-full">
                 <div className={`relative ${i === 0 ? 'h-80 md:h-full min-h-[24rem]' : 'h-64 md:h-72'} overflow-hidden`}>
                   <img
                     src={service.image}

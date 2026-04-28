@@ -33,25 +33,22 @@ export default function BookingForm() {
   const handleSubmit = async (/** @type {{ preventDefault: () => void; }} */ e) => {
     e.preventDefault();
     setSubmitting(true);
-
-    // Simulate form submission - in production, replace with actual API endpoint
     try {
-      // Log the enquiry to console for now
-      console.log('Booking enquiry submitted:', form);
-
-      // Option 1: Send to a webhook or API endpoint
-      // await fetch('/api/booking-enquiry', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(form)
-      // });
-
-      // Option 2: Use mailto link
-      // window.location.href = `mailto:info@genesisgardens.com?subject=New Booking Enquiry&body=${encodeURIComponent(JSON.stringify(form, null, 2))}`;
-
-      // For demo purposes, just wait a moment
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      await base44.entities.BookingEnquiry.create(form);
+      await Promise.all([
+        base44.integrations.Core.SendEmail({
+          from_name: 'Genesis Gardens & Campsite',
+          to: 'reservations@genesiscampsite.ug',
+          subject: `New booking enquiry from ${form.name}`,
+          body: `You have a new booking enquiry!\n\nName: ${form.name}\nPhone: ${form.phone}\nPurpose: ${form.purpose}\nPreferred Date: ${form.preferred_date || 'Not specified'}\nGuest Count: ${form.guest_count || 'Not specified'}\nNotes: ${form.notes || 'None'}\n\nLog in to your Genesis admin dashboard to view and follow up.`,
+        }),
+        base44.integrations.Core.SendEmail({
+          from_name: 'Genesis Gardens & Campsite',
+          to: form.email || form.phone,
+          subject: `We've received your enquiry, ${form.name.split(' ')[0]} 🌿`,
+          body: `Hi ${form.name.split(' ')[0]},\n\nThank you for reaching out to Genesis Gardens and Campsite! We're so glad you're considering spending time with us.\n\nWe've received your enquiry about ${form.purpose.toLowerCase()} and we'll get back to you within a few hours to discuss availability, options, and next steps.\n\nIn the meantime, if you need anything urgently, the quickest way to reach us is via WhatsApp.\n\n---\nYour enquiry summary:\n• Purpose: ${form.purpose}\n${form.preferred_date ? `• Preferred date: ${form.preferred_date}\n` : ''}${form.guest_count ? `• Number of guests: ${form.guest_count}\n` : ''}${form.notes ? `• Notes: ${form.notes}\n` : ''}\n---\n\nWe look forward to welcoming you.\n\nWarm regards,\nVanessa & the Genesis team\nGenesis Gardens and Campsite, Mukono-Seeta, Uganda`,
+        }),
+      ]);
       setSubmitting(false);
       setSubmitted(true);
     } catch (error) {

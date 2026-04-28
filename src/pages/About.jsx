@@ -31,9 +31,9 @@ export default function About() {
         intro="Discover the story behind Genesis Gardens and Campsite — a place built on the simple, powerful idea that genuine hospitality can change the way people feel."
       />
 
-      {/* Origin story */}
-      <section className="pb-20 lg:pb-28">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+       {/* Origin story */}
+       <section className="pb-20 lg:pb-28">
+         <div className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -42,11 +42,11 @@ export default function About() {
           >
             <div className="relative overflow-hidden rounded-3xl">
                <img
-                 src="/images/WhatsApp-Image-2023-03-28-at-17.02.51.jpg"
+                 src="/images/owner.jpeg"
                  alt="Welcoming entrance to Genesis Gardens"
                  className="w-full h-72 sm:h-80 lg:h-[32rem] object-cover"
                />
-            </div>
+            </div>X
           </motion.div>
 
           <motion.div
