@@ -33,7 +33,7 @@ const channels = [
     sublabel: 'Mukono-Seeta',
     description: 'Off Kampala Road, 2km from the Kampala-Katosi Road junction. Ample parking on site.',
     value: 'Get directions',
-    href: 'https://maps.google.com',
+    href: 'https://maps.app.goo.gl/SfPRhzrQUgHQsqgK9',
   },
 ];
 
