@@ -34,7 +34,7 @@ const services = [
     image: '/images/WhatsApp-Image-2023-01-08-at-13.04.18.jpg',
     alt: 'Vibrant East African buffet at Genesis',
     span: '',
-    link: '/services',
+    link: '/gallery#catering',
   },
 ];
 
@@ -61,7 +61,7 @@ export default function ServiceSnapshot() {
         </motion.p>
 
         {/* Bento grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 lg:gap-5">
           {services.map((service, i) => (
             <motion.div
               key={service.title}
@@ -69,21 +69,21 @@ export default function ServiceSnapshot() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className={`group relative overflow-hidden rounded-2xl cursor-pointer ${service.span}`}
+              className={`group relative overflow-hidden rounded-2xl cursor-pointer ${i === 0 ? 'sm:col-span-2 md:col-span-2 md:row-span-2' : ''}`}
             >
-               <Link to={service.link} className="block h-full">
-                <div className={`relative ${i === 0 ? 'h-80 md:h-full min-h-[24rem]' : 'h-64 md:h-72'} overflow-hidden`}>
+              <Link to={service.link} className="block h-full">
+                <div className={`relative ${i === 0 ? 'h-72 sm:h-80 md:h-full md:min-h-[28rem]' : 'h-64'} overflow-hidden`}>
                   <img
                     src={service.image}
                     alt={service.alt}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-accent/80 transition-all duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
-                    <h3 className="font-heading text-2xl lg:text-3xl font-semibold text-white mb-2">
+                  <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-8">
+                    <h3 className="font-heading text-xl lg:text-3xl font-semibold text-white mb-1.5">
                       {service.title}
                     </h3>
-                    <p className="font-body text-sm text-white/80 leading-relaxed max-w-md">
+                    <p className="font-body text-sm text-white/80 leading-relaxed max-w-md hidden sm:block">
                       {service.description}
                     </p>
                     <span className="inline-flex items-center gap-1 mt-3 font-body text-sm text-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

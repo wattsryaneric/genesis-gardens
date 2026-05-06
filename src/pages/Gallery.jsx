@@ -35,6 +35,166 @@ const photos = [
     caption: 'The Garden Room',
     category: 'Accommodation',
   },
+  {
+    src: '/images/logo.jpg',
+    caption: 'Genesis Gardens logo',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/logo_small.png',
+    caption: 'Our brand mark',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/owner.jpeg',
+    caption: 'Meet the owner',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.50 (1).jpeg',
+    caption: 'Spring blooms in full glory',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.50.jpeg',
+    caption: 'Terrace dining setup',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (1).jpeg',
+    caption: 'Garden pathway at dawn',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (2).jpeg',
+    caption: 'Cozy cabin interior',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (3).jpeg',
+    caption: 'Campfire under the stars',
+    category: 'Camping',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (4).jpeg',
+    caption: 'Lawn ceremony setup',
+    category: 'Events',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (5).jpeg',
+    caption: 'Fresh harvest from our kitchen garden',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51 (6).jpeg',
+    caption: 'Poolside relaxation',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.51.jpeg',
+    caption: 'Welcome lounge area',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (1).jpeg',
+    caption: 'Rose garden archway',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (2).jpeg',
+    caption: 'Deluxe suite bedroom',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (3).jpeg',
+    caption: 'Outdoor banquet setup',
+    category: 'Events',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (4).jpeg',
+    caption: 'BBQ grilling station',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (5).jpeg',
+    caption: 'Tent camping at the grounds',
+    category: 'Camping',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (6).jpeg',
+    caption: 'Veranda with garden view',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (7).jpeg',
+    caption: 'Plated dinner service',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (8).jpeg',
+    caption: 'Wildflower meadow',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (9).jpeg',
+    caption: 'Glamping tents',
+    category: 'Camping',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (10).jpeg',
+    caption: 'Cocktail hour by the pool',
+    category: 'Events',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (11).jpeg',
+    caption: 'Kitchen prep area',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53 (12).jpeg',
+    caption: 'Ornamental water feature',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.32.53.jpeg',
+    caption: 'Main building exterior',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (1).jpeg',
+    caption: 'Garden trellis walkway',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (2).jpeg',
+    caption: 'Master suite balcony',
+    category: 'Accommodation',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (3).jpeg',
+    caption: 'Wedding ceremony arch',
+    category: 'Events',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (4).jpeg',
+    caption: 'Farm-to-table ingredients',
+    category: 'Catering',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (5).jpeg',
+    caption: 'Rustic camping site',
+    category: 'Camping',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29 (6).jpeg',
+    caption: 'Sunset garden view',
+    category: 'Gardens',
+  },
+  {
+    src: '/images/WhatsApp Image 2026-04-25 at 15.49.29.jpeg',
+    caption: 'Reception hall interior',
+    category: 'Events',
+  },
 ];
 
 const categories = ['All', 'Gardens', 'Accommodation', 'Events', 'Catering', 'Camping'];
@@ -42,6 +202,15 @@ const categories = ['All', 'Gardens', 'Accommodation', 'Events', 'Catering', 'Ca
 export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  // Handle hash on mount for deep linking (e.g., /gallery#catering)
+  React.useEffect(() => {
+    const hash = window.location.hash.slice(1); // remove #
+    const validCategories = ['Gardens', 'Accommodation', 'Events', 'Catering', 'Camping'];
+    if (validCategories.includes(hash)) {
+      setActiveCategory(hash);
+    }
+  }, []);
 
   const filtered = activeCategory === 'All'
     ? photos
@@ -67,13 +236,14 @@ export default function Gallery() {
       />
 
       {/* Filter tabs */}
-      <section className="pb-10">
+      <section className="pb-10" id="gallery-filters">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-wrap gap-2 justify-center">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
+                id={cat === 'Catering' ? 'catering' : undefined}
                 className={`px-5 py-2 rounded-full font-body text-sm transition-all duration-300 ${
                   activeCategory === cat
                     ? 'bg-accent text-accent-foreground shadow-sm'
