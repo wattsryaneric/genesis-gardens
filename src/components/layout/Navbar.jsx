@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  { label: 'Services', path: '/services' },
-  { label: 'About Us', path: '/about' },
+  { label: 'Stay & Camp', path: '/accommodation' },
+  { label: 'Events & Dining', path: '/services' },
   { label: 'Gallery', path: '/gallery' },
-  { label: 'Accommodation', path: '/accommodation' },
+  { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
 
@@ -51,6 +51,7 @@ export default function Navbar() {
                   ? 'text-accent font-medium'
                   : 'text-primary/70 hover:text-primary'
               }`}
+              aria-current={location.pathname === link.path ? 'page' : undefined}
             >
               {link.label}
             </Link>
@@ -59,13 +60,16 @@ export default function Navbar() {
             to="/contact"
             className="font-body text-sm px-5 py-2 rounded-full bg-accent/10 backdrop-blur-sm text-accent border border-accent/20 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
           >
-            Book a visit
+            Check availability
           </Link>
         </div>
 
         {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-menu"
           className="md:hidden p-2 text-primary"
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -76,6 +80,7 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -99,7 +104,7 @@ export default function Navbar() {
                 to="/contact"
                 className="font-body text-sm text-center px-5 py-3 rounded-full bg-accent text-accent-foreground mt-2"
               >
-                Book a visit
+                Check availability
               </Link>
             </div>
           </motion.div>

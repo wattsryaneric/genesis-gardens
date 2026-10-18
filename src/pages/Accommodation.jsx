@@ -16,6 +16,8 @@ const rooms = [
     image: '/images/WhatsApp-Image-2023-01-08-at-12.52.32.jpg',
     sleeps: '1–2 guests',
     beds: '1 Queen bed',
+    bathroom: 'En-suite bathroom',
+    bestFor: 'Couples or solo travellers',
     amenities: ['En-suite bathroom', 'Garden view', 'Clean linens provided', 'Secure parking'],
   },
   {
@@ -26,6 +28,8 @@ const rooms = [
     image: '/images/WhatsApp-Image-2023-01-08-at-12.52.33.jpg',
     sleeps: '2 guests',
     beds: '2 Single beds',
+    bathroom: 'Shared bathroom access',
+    bestFor: 'Friends or colleagues',
     amenities: ['Shared bathroom access', 'Garden-facing windows', 'Clean linens provided', 'Secure parking'],
   },
   {
@@ -36,6 +40,8 @@ const rooms = [
     image: '/images/WhatsApp-Image-2023-01-08-at-13.04.06.jpg',
     sleeps: 'Up to 3 guests',
     beds: '1 Double + 1 Single',
+    bathroom: 'En-suite bathroom',
+    bestFor: 'Families or small groups',
     amenities: ['En-suite bathroom', 'Garden access', 'Clean linens provided', 'Secure parking'],
   },
 ];
@@ -132,6 +138,21 @@ function RoomCard({ room, index }) {
           </div>
         </div>
 
+        <dl className="mb-5 grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl bg-secondary/70 p-4 font-body text-xs">
+          <div>
+            <dt className="text-muted-foreground">Bathroom</dt>
+            <dd className="mt-1 font-medium text-foreground">{room.bathroom}</dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">Best for</dt>
+            <dd className="mt-1 font-medium text-foreground">{room.bestFor}</dd>
+          </div>
+          <div className="col-span-2 border-t border-border/50 pt-3">
+            <dt className="text-muted-foreground">Rates & availability</dt>
+            <dd className="mt-1 font-medium text-foreground">Confirmed for your dates on enquiry</dd>
+          </div>
+        </dl>
+
         {/* Amenities */}
         <ul className="space-y-2 mb-6">
           {room.amenities.map((a) => (
@@ -143,10 +164,10 @@ function RoomCard({ room, index }) {
         </ul>
 
         <Link
-          to="/contact"
+          to={`/contact?enquiry=${encodeURIComponent(room.name)}&purpose=Accommodation`}
           className="inline-flex items-center gap-2 font-body text-sm text-accent font-medium hover:gap-3 transition-all duration-300"
         >
-          Book this room <ArrowRight className="w-4 h-4" />
+          Enquire about this room <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </motion.div>
@@ -227,10 +248,19 @@ export default function Accommodation() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-heading text-3xl lg:text-4xl font-semibold text-foreground mb-12"
+            className="font-heading text-3xl lg:text-4xl font-semibold text-foreground mb-3"
           >
             Three rooms. Each one waiting for you.
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15 }}
+            className="font-body text-sm text-muted-foreground mb-12"
+          >
+            Rates depend on dates and length of stay — enquire and we'll confirm pricing and availability for you.
+          </motion.p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {rooms.map((room, i) => (
@@ -386,7 +416,7 @@ export default function Accommodation() {
               </p>
 
               <Link
-                to="/contact"
+                to="/contact?enquiry=Meeting%20Room&purpose=Event"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-all duration-300"
               >
                 Enquire about the meeting room

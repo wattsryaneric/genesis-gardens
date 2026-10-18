@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star } from 'lucide-react';
 
 const reviews = [
   {
@@ -9,7 +8,7 @@ const reviews = [
   },
   {
     quote: "Absolutely lovely. Very clean. You can feel the love in how it's maintained.",
-    author: "Verified guest",
+    author: "Guest feedback",
   },
   {
     quote: "Another weekend of unforgettable experience. This place keeps drawing us back.",
@@ -17,17 +16,9 @@ const reviews = [
   },
 ];
 
-// Duplicate for seamless loop
-const allReviews = [...reviews, ...reviews];
-
 function ReviewCard({ quote, author }) {
   return (
-    <div className="flex-shrink-0 w-80 sm:w-96 bg-card rounded-2xl p-8 border border-border/50 shadow-sm">
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-highlight text-highlight" />
-        ))}
-      </div>
+    <div className="h-full rounded-2xl border border-border/50 bg-card p-7 lg:p-8">
       <p className="font-heading text-lg italic text-foreground leading-relaxed mb-6">
         "{quote}"
       </p>
@@ -57,15 +48,14 @@ export default function Testimonials() {
           transition={{ delay: 0.1 }}
           className="font-heading text-3xl lg:text-4xl font-semibold text-foreground"
         >
-          Don't take our word for it.
+          Thoughtful words from our guests.
         </motion.h2>
       </div>
 
-      {/* Horizontal scroll marquee */}
-      <div className="relative">
-        <div className="flex gap-6 animate-marquee">
-          {allReviews.map((review, i) => (
-            <ReviewCard key={i} {...review} />
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {reviews.map((review) => (
+            <ReviewCard key={`${review.author}-${review.quote}`} {...review} />
           ))}
         </div>
       </div>

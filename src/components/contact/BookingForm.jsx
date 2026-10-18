@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, Check } from 'lucide-react';
+import { Check, MessageCircle } from 'lucide-react';
+
+const OWNER_WHATSAPP_NUMBER = '256777979994';
 
 const purposes = [
   'Accommodation',
@@ -15,47 +18,43 @@ const purposes = [
 ];
 
 export default function BookingForm() {
+  const [searchParams] = useSearchParams();
+  const enquiry = searchParams.get('enquiry') || '';
+  const prefilledPurpose = purposes.includes(searchParams.get('purpose')) ? searchParams.get('purpose') : '';
+
   const [form, setForm] = useState({
     name: '',
     phone: '',
-    purpose: '',
+    purpose: prefilledPurpose,
     preferred_date: '',
     guest_count: '',
-    notes: '',
+    notes: enquiry ? `Interested in: ${enquiry}` : '',
   });
-  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (/** @type {string} */ field, /** @type {string} */ value) => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (/** @type {{ preventDefault: () => void; }} */ e) => {
+  const handleSubmit = (/** @type {{ preventDefault: () => void; }} */ e) => {
     e.preventDefault();
-    setSubmitting(true);
-    try {
-      await base44.entities.BookingEnquiry.create(form);
-      await Promise.all([
-        base44.integrations.Core.SendEmail({
-          from_name: 'Genesis Gardens & Campsite',
-          to: 'reservations@genesiscampsite.ug',
-          subject: `New booking enquiry from ${form.name}`,
-          body: `You have a new booking enquiry!\n\nName: ${form.name}\nPhone: ${form.phone}\nPurpose: ${form.purpose}\nPreferred Date: ${form.preferred_date || 'Not specified'}\nGuest Count: ${form.guest_count || 'Not specified'}\nNotes: ${form.notes || 'None'}\n\nLog in to your Genesis admin dashboard to view and follow up.`,
-        }),
-        base44.integrations.Core.SendEmail({
-          from_name: 'Genesis Gardens & Campsite',
-          to: form.email || form.phone,
-          subject: `We've received your enquiry, ${form.name.split(' ')[0]} 🌿`,
-          body: `Hi ${form.name.split(' ')[0]},\n\nThank you for reaching out to Genesis Gardens and Campsite! We're so glad you're considering spending time with us.\n\nWe've received your enquiry about ${form.purpose.toLowerCase()} and we'll get back to you within a few hours to discuss availability, options, and next steps.\n\nIn the meantime, if you need anything urgently, the quickest way to reach us is via WhatsApp.\n\n---\nYour enquiry summary:\n• Purpose: ${form.purpose}\n${form.preferred_date ? `• Preferred date: ${form.preferred_date}\n` : ''}${form.guest_count ? `• Number of guests: ${form.guest_count}\n` : ''}${form.notes ? `• Notes: ${form.notes}\n` : ''}\n---\n\nWe look forward to welcoming you.\n\nWarm regards,\nVanessa & the Genesis team\nGenesis Gardens and Campsite, Mukono-Seeta, Uganda`,
-        }),
-      ]);
-      setSubmitting(false);
-      setSubmitted(true);
-    } catch (error) {
-      console.error('Error submitting enquiry:', error);
-      setSubmitting(false);
-      alert('Something went wrong. Please try again or contact us directly via WhatsApp.');
-    }
+
+    const lines = [
+      'New booking enquiry — Genesis Gardens',
+      `Name: ${form.name}`,
+      `Phone: ${form.phone}`,
+      `Purpose: ${form.purpose}`,
+      form.preferred_date && `Preferred date: ${form.preferred_date}`,
+      form.guest_count && `Guests: ${form.guest_count}`,
+      form.notes && `Notes: ${form.notes}`,
+    ].filter(Boolean);
+
+    window.open(
+      `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+    setSubmitted(true);
   };
 
   if (submitted) {
@@ -69,10 +68,10 @@ export default function BookingForm() {
           <Check className="w-7 h-7 text-accent" />
         </div>
         <h3 className="font-heading text-2xl font-semibold text-foreground mb-3">
-          Enquiry sent!
+          Almost there!
         </h3>
         <p className="font-body text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
-          We usually respond within a few hours. If you need us sooner, WhatsApp is the quickest way to reach us. Either way — we can't wait to welcome you.
+          We've opened WhatsApp with your enquiry details filled in — just hit send over there and we'll get back to you within a few hours. Didn't open? You can also reach us directly on WhatsApp.
         </p>
       </motion.div>
     );
@@ -167,18 +166,15 @@ export default function BookingForm() {
 
         <button
           type="submit"
-          disabled={submitting || !form.name || !form.phone || !form.purpose}
+          disabled={!form.name || !form.phone || !form.purpose}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {submitting ? (
-            <div className="w-4 h-4 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
-          ) : (
-            <>
-              Send my enquiry — we'll be in touch soon
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
+          Continue to WhatsApp
+          <MessageCircle className="w-4 h-4" />
         </button>
+        <p className="font-body text-xs leading-relaxed text-muted-foreground">
+          We’ll prepare your message in WhatsApp. Review it there and tap send to submit your enquiry.
+        </p>
       </form>
     </motion.div>
   );

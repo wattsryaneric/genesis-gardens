@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, BedDouble, ChevronDown, MapPin, MessageCircle, UsersRound } from 'lucide-react';
+
+const quickFacts = [
+  { icon: MapPin, label: 'Mukono–Seeta', detail: '2 km from the Kampala–Katosi Road junction' },
+  { icon: BedDouble, label: 'Stay your way', detail: 'Rooms, camping, and day visits' },
+  { icon: UsersRound, label: 'For every gathering', detail: 'Intimate stays to groups of 100' },
+  { icon: MessageCircle, label: 'Quick enquiries', detail: 'Plan your visit on WhatsApp' },
+];
 
 export default function HeroSection() {
   return (
@@ -17,7 +24,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 pt-16 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,15 +55,30 @@ export default function HeroSection() {
             to="/contact"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Book a visit
+            Check availability
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            to="/services"
+            to="/accommodation"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-white/30 text-white font-body text-sm backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
           >
-            See what we offer
+            Explore stays & events
           </Link>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.8 }}
+          className="mt-10 grid grid-cols-2 gap-x-5 gap-y-4 text-left sm:grid-cols-4"
+        >
+          {quickFacts.map((fact) => (
+            <div key={fact.label} className="border-l border-white/30 pl-3 sm:pl-4">
+              <fact.icon className="mb-2 h-4 w-4 text-white/75" aria-hidden="true" />
+              <p className="font-body text-xs font-medium text-white">{fact.label}</p>
+              <p className="mt-0.5 font-body text-[11px] leading-snug text-white/70">{fact.detail}</p>
+            </div>
+          ))}
         </motion.div>
       </div>
 
@@ -65,7 +87,8 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        aria-hidden="true"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

@@ -76,7 +76,7 @@ export default function CTABanner({
            )}
            {showWhatsApp && (
              <a
-               href="https://wa.me/"
+               href="https://wa.me/256777979994"
                target="_blank"
                rel="noopener noreferrer"
                className={`inline-flex items-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3 rounded-full font-body text-sm border transition-all duration-300 ${outlineClass}`}
@@ -86,13 +86,13 @@ export default function CTABanner({
              </a>
            )}
            {showEmail && (
-             <Link
-               to="/contact"
+            <a
+              href="mailto:reservations@genesiscampsite.ug"
                className={`inline-flex items-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3 rounded-full font-body text-sm border transition-all duration-300 ${outlineClass}`}
              >
                <Mail className="w-4 h-4" />
                Send an email
-             </Link>
+            </a>
            )}
         </motion.div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import PageHero from '../components/shared/PageHero';
@@ -202,6 +202,13 @@ const categories = ['All', 'Gardens', 'Accommodation', 'Events', 'Catering', 'Ca
 export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const lightboxRef = useRef(null);
+
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      lightboxRef.current?.focus();
+    }
+  }, [lightboxIndex]);
 
   // Handle hash on mount for deep linking (e.g., /gallery#catering)
   React.useEffect(() => {
@@ -272,6 +279,10 @@ export default function Gallery() {
                   transition={{ duration: 0.35, delay: i * 0.04 }}
                   className="group relative break-inside-avoid overflow-hidden rounded-2xl cursor-pointer"
                   onClick={() => openLightbox(i)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); } }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open image: ${photo.caption}`}
                 >
                   <img
                     src={photo.src}
@@ -294,18 +305,23 @@ export default function Gallery() {
       <AnimatePresence>
         {lightboxIndex !== null && (
           <motion.div
+            ref={lightboxRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 outline-none"
             onClick={closeLightbox}
             onKeyDown={handleKeyDown}
             tabIndex={0}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Image viewer: ${filtered[lightboxIndex].caption}`}
           >
             {/* Close */}
             <button
               className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors"
               onClick={closeLightbox}
+              aria-label="Close image viewer"
             >
               <X className="w-7 h-7" />
             </button>
@@ -314,6 +330,7 @@ export default function Gallery() {
             <button
               className="absolute left-4 text-white/70 hover:text-white transition-colors"
               onClick={(e) => { e.stopPropagation(); prev(); }}
+              aria-label="Previous image"
             >
               <ChevronLeft className="w-9 h-9" />
             </button>
@@ -342,6 +359,7 @@ export default function Gallery() {
             <button
               className="absolute right-4 text-white/70 hover:text-white transition-colors"
               onClick={(e) => { e.stopPropagation(); next(); }}
+              aria-label="Next image"
             >
               <ChevronRight className="w-9 h-9" />
             </button>

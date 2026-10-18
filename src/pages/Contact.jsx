@@ -19,7 +19,7 @@ export default function Contact() {
             <div>
               <ContactChannels />
 
-              {/* Map placeholder */}
+              {/* Map: verified Genesis Gardens and campsite location */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ export default function Contact() {
               >
                 <iframe
                   title="Genesis Gardens Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7!2d32.74990076716947!3d0.3388373167497599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sGenesis%20Gardens%2C%208PQX%2B73%20Mukono!5e0!3m2!1sen!2sug!4v1"
+                  src="https://www.google.com/maps?q=Genesis+Gardens+and+campsite,0.3381932,32.7477438&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -38,6 +38,15 @@ export default function Contact() {
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </motion.div>
+
+              <a
+                href="https://maps.app.goo.gl/SfPRhzrQUgHQsqgK9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mt-3 font-body text-sm text-accent hover:underline"
+              >
+                Open in Google Maps →
+              </a>
             </div>
 
             {/* Right: Booking form */}
