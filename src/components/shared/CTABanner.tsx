@@ -19,7 +19,7 @@ export default function CTABanner({
   showBookNow = true,
   showWhatsApp = true,
   showEmail = true,
-  bookLabel = "Book now",
+  bookLabel = "Plan your visit",
   variant = "default"
 }: CTABannerProps) {
   const bgClass = variant === "dark"

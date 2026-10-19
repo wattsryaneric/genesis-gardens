@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+import { navLinks } from '@/lib/navigation.mjs';
 
 export default function Footer() {
   return (
@@ -18,13 +19,8 @@ export default function Footer() {
           {/* Quick links */}
           <div>
             <h4 className="font-heading text-lg font-medium mb-4">Explore</h4>
-            <div className="flex flex-col gap-3">
-              {[
-                { label: 'Home', path: '/' },
-                { label: 'Our Services', path: '/services' },
-                { label: 'About Us', path: '/about' },
-                { label: 'Get in Touch', path: '/contact' },
-              ].map((link) => (
+            <nav aria-label="Footer" className="flex flex-col gap-3">
+              {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
@@ -33,7 +29,7 @@ export default function Footer() {
                   {link.label}
                 </Link>
               ))}
-            </div>
+            </nav>
           </div>
 
           {/* Contact */}

@@ -55,14 +55,14 @@ export default function HeroSection() {
             to="/contact"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Check availability
+            Ask about availability
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             to="/accommodation"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-white/30 text-white font-body text-sm backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
           >
-            Explore stays & events
+            Explore accommodation
           </Link>
         </motion.div>
 

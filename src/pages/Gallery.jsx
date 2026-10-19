@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { categories, categoryFromHash } from '@/lib/gallery.mjs';
 import PageHero from '../components/shared/PageHero';
 import CTABanner from '../components/shared/CTABanner';
 
@@ -197,42 +200,42 @@ const photos = [
   },
 ];
 
-const categories = ['All', 'Gardens', 'Accommodation', 'Events', 'Catering', 'Camping'];
-
 export default function Gallery() {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState(() => categoryFromHash(location.hash));
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const lightboxRef = useRef(null);
+  const openerRef = useRef(null);
 
   useEffect(() => {
-    if (lightboxIndex !== null) {
-      lightboxRef.current?.focus();
-    }
-  }, [lightboxIndex]);
+    setActiveCategory(categoryFromHash(location.hash));
+    setLightboxIndex(null);
+  }, [location.hash]);
 
-  // Handle hash on mount for deep linking (e.g., /gallery#catering)
-  React.useEffect(() => {
-    const hash = window.location.hash.slice(1); // remove #
-    const validCategories = ['Gardens', 'Accommodation', 'Events', 'Catering', 'Camping'];
-    if (validCategories.includes(hash)) {
-      setActiveCategory(hash);
-    }
+  useEffect(() => {
+    const onHashChange = () => {
+      setActiveCategory(categoryFromHash(window.location.hash));
+      setLightboxIndex(null);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   const filtered = activeCategory === 'All'
     ? photos
     : photos.filter(p => p.category === activeCategory);
 
-  const openLightbox = (index) => setLightboxIndex(index);
-  const closeLightbox = () => setLightboxIndex(null);
+  const openLightbox = (index, opener) => {
+    openerRef.current = opener;
+    setLightboxIndex(index);
+  };
 
   const prev = () => setLightboxIndex((i) => (i - 1 + filtered.length) % filtered.length);
   const next = () => setLightboxIndex((i) => (i + 1) % filtered.length);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'ArrowLeft') prev();
-    if (e.key === 'ArrowRight') next();
-    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
   };
 
   return (
@@ -249,7 +252,12 @@ export default function Gallery() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setLightboxIndex(null);
+                  navigate({ pathname: location.pathname, search: location.search, hash: cat === 'All' ? '' : `#${cat.toLowerCase()}` });
+                }}
+                aria-pressed={activeCategory === cat}
                 id={cat === 'Catering' ? 'catering' : undefined}
                 className={`px-5 py-2 rounded-full font-body text-sm transition-all duration-300 ${
                   activeCategory === cat
@@ -270,18 +278,16 @@ export default function Gallery() {
           <motion.div layout className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
             <AnimatePresence>
               {filtered.map((photo, i) => (
-                <motion.div
+                <motion.button
+                  type="button"
                   key={photo.src + photo.caption}
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35, delay: i * 0.04 }}
-                  className="group relative break-inside-avoid overflow-hidden rounded-2xl cursor-pointer"
-                  onClick={() => openLightbox(i)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); } }}
-                  role="button"
-                  tabIndex={0}
+                  className="group relative block w-full break-inside-avoid overflow-hidden rounded-2xl cursor-pointer text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                  onClick={(e) => openLightbox(i, e.currentTarget)}
                   aria-label={`Open image: ${photo.caption}`}
                 >
                   <img
@@ -294,78 +300,49 @@ export default function Gallery() {
                       {photo.caption}
                     </p>
                   </div>
-                </motion.div>
+                </motion.button>
               ))}
             </AnimatePresence>
           </motion.div>
         </div>
       </section>
 
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightboxIndex !== null && (
-          <motion.div
-            ref={lightboxRef}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 outline-none"
-            onClick={closeLightbox}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Image viewer: ${filtered[lightboxIndex].caption}`}
-          >
-            {/* Close */}
-            <button
-              className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors"
-              onClick={closeLightbox}
-              aria-label="Close image viewer"
-            >
-              <X className="w-7 h-7" />
-            </button>
-
-            {/* Prev */}
-            <button
-              className="absolute left-4 text-white/70 hover:text-white transition-colors"
-              onClick={(e) => { e.stopPropagation(); prev(); }}
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="w-9 h-9" />
-            </button>
-
-            {/* Image */}
-            <motion.div
-              key={lightboxIndex}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="max-w-4xl max-h-[85vh] flex flex-col items-center"
-              onClick={(e) => e.stopPropagation()}
-            >
+      <Dialog open={lightboxIndex !== null} onOpenChange={open => { if (!open) setLightboxIndex(null); }}>
+        <DialogContent
+          className="max-w-[calc(100%-2rem)] sm:max-w-5xl max-h-[92dvh] overflow-y-auto border-white/20 bg-black p-4 pt-12 text-white [&>button]:text-white [&>button]:focus:ring-white"
+          onKeyDown={handleKeyDown}
+          onCloseAutoFocus={event => {
+            event.preventDefault();
+            openerRef.current?.focus();
+          }}
+        >
+          <DialogTitle className="sr-only">Genesis Gardens image viewer</DialogTitle>
+          <DialogDescription className="sr-only">Use the previous and next buttons or arrow keys to browse photos. Press Escape to close.</DialogDescription>
+          {lightboxIndex !== null && filtered[lightboxIndex] && (
+            <>
               <img
                 src={filtered[lightboxIndex].src}
                 alt={filtered[lightboxIndex].caption}
-                className="max-h-[78vh] max-w-full object-contain rounded-xl"
+                className="mx-auto max-h-[65dvh] max-w-full object-contain rounded-lg"
               />
-              <p className="font-body text-sm text-white/60 mt-4">
-                {filtered[lightboxIndex].caption}
-              </p>
-            </motion.div>
-
-            {/* Next */}
-            <button
-              className="absolute right-4 text-white/70 hover:text-white transition-colors"
-              onClick={(e) => { e.stopPropagation(); next(); }}
-              aria-label="Next image"
-            >
-              <ChevronRight className="w-9 h-9" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="flex items-center justify-between gap-3">
+                <button type="button" onClick={prev} aria-label="Previous image"
+                  className="shrink-0 rounded-full p-3 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <div className="text-center font-body text-sm" aria-live="polite" aria-atomic="true">
+                  <p>{filtered[lightboxIndex].caption}</p>
+                  <p className="mt-1 text-white/60">{lightboxIndex + 1} of {filtered.length}</p>
+                </div>
+                <button type="button" onClick={next} aria-label="Next image"
+                  className="shrink-0 rounded-full p-3 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <CTABanner
         heading="Seen enough to know you want to visit?"

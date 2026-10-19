@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Layout from './components/layout/Layout';
+import NavigationEffects from './components/layout/NavigationEffects';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import About from './pages/About';
@@ -62,6 +63,7 @@ function App() {
         <QueryClientProvider client={queryClientInstance}>
           <Router>
             <AuthenticatedApp />
+            <NavigationEffects />
           </Router>
           <Toaster />
         </QueryClientProvider>

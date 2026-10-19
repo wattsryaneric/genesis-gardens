@@ -1,181 +1,185 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Check, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { createEnquiryMessage, enquiryWhatsAppUrl, localDateValue, purposes, validateEnquiry } from '@/lib/enquiry.mjs';
 
-const OWNER_WHATSAPP_NUMBER = '256777979994';
+function Field({ field, label, error, children }) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={field} className="font-body text-sm text-foreground">{label}</Label>
+      {children}
+      {error && <p id={`${field}-error`} className="font-body text-sm text-destructive">{error}</p>}
+    </div>
+  );
+}
 
-const purposes = [
-  'Accommodation',
-  'Event',
-  'Day Visit',
-  'Catering',
-  'Just exploring',
-];
-
-export default function BookingForm() {
-  const [searchParams] = useSearchParams();
-  const enquiry = searchParams.get('enquiry') || '';
-  const prefilledPurpose = purposes.includes(searchParams.get('purpose')) ? searchParams.get('purpose') : '';
-
+function BookingEnquiryForm({ enquiry, purpose }) {
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    purpose: prefilledPurpose,
-    preferred_date: '',
-    guest_count: '',
+    name: '', phone: '', purpose, arrival: '', departure: '', guest_count: '',
     notes: enquiry ? `Interested in: ${enquiry}` : '',
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [prepared, setPrepared] = useState(null);
+  const [copyStatus, setCopyStatus] = useState('');
+  const headingRef = useRef(null);
+  const formRef = useRef(null);
+  const editingRef = useRef(false);
+  const today = localDateValue();
+  const inputClass = 'bg-background border-border/50 font-body rounded-xl h-12';
 
-  const handleChange = (/** @type {string} */ field, /** @type {string} */ value) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+  useEffect(() => {
+    if (prepared) headingRef.current?.focus();
+    else if (editingRef.current) {
+      formRef.current?.querySelector('#enquiry-name')?.focus();
+      editingRef.current = false;
+    }
+  }, [prepared]);
+
+  const fieldProps = (field) => ({
+    id: `enquiry-${field}`,
+    name: field,
+    value: form[field],
+    onChange: (event) => handleChange(field, event.target.value),
+    'aria-invalid': Boolean(errors[field]),
+    'aria-describedby': errors[field] ? `enquiry-${field}-error` : undefined,
+  });
+
+  const handleChange = (field, value) => {
+    const next = { ...form, [field]: value };
+    if (field === 'purpose' && value !== 'Accommodation') next.departure = '';
+    setForm(next);
+    setErrors(current => {
+      const validation = validateEnquiry(next);
+      return Object.fromEntries(Object.keys(current).filter(key => validation[key]).map(key => [key, validation[key]]));
+    });
   };
 
-  const handleSubmit = (/** @type {{ preventDefault: () => void; }} */ e) => {
-    e.preventDefault();
-
-    const lines = [
-      'New booking enquiry — Genesis Gardens',
-      `Name: ${form.name}`,
-      `Phone: ${form.phone}`,
-      `Purpose: ${form.purpose}`,
-      form.preferred_date && `Preferred date: ${form.preferred_date}`,
-      form.guest_count && `Guests: ${form.guest_count}`,
-      form.notes && `Notes: ${form.notes}`,
-    ].filter(Boolean);
-
-    window.open(
-      `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-    setSubmitted(true);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const validation = validateEnquiry(form);
+    setErrors(validation);
+    if (Object.keys(validation).length) {
+      formRef.current?.querySelector(`#enquiry-${Object.keys(validation)[0]}`)?.focus();
+      return;
+    }
+    const message = createEnquiryMessage(form);
+    const url = enquiryWhatsAppUrl(message);
+    // The visitor still needs to send the message in WhatsApp.
+    setPrepared({ message, url });
+    setCopyStatus('');
+    try {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch {
+      setCopyStatus('WhatsApp could not be opened. Use the link below or copy your enquiry.');
+    }
   };
 
-  if (submitted) {
+  const copyEnquiry = async () => {
+    try {
+      await navigator.clipboard.writeText(prepared.message);
+      setCopyStatus('Enquiry copied. Paste it into your WhatsApp conversation.');
+    } catch {
+      setCopyStatus('Copy is unavailable. Select and copy your message from the box below.');
+    }
+  };
+
+  if (prepared) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-card rounded-2xl p-10 lg:p-14 border border-border/50 text-center"
-      >
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-          <Check className="w-7 h-7 text-accent" />
-        </div>
-        <h3 className="font-heading text-2xl font-semibold text-foreground mb-3">
-          Almost there!
+      <section className="bg-card rounded-2xl p-8 lg:p-10 border border-border/50" aria-labelledby="enquiry-ready">
+        <h3 id="enquiry-ready" ref={headingRef} tabIndex={-1} className="font-heading text-2xl font-semibold text-foreground mb-3">
+          Your enquiry is ready
         </h3>
-        <p className="font-body text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
-          We've opened WhatsApp with your enquiry details filled in — just hit send over there and we'll get back to you within a few hours. Didn't open? You can also reach us directly on WhatsApp.
+        <p className="font-body text-base text-muted-foreground leading-relaxed">
+          Review your message in WhatsApp and tap Send. If WhatsApp didn’t open, use the link below or copy your message.
         </p>
-      </motion.div>
+        <p className="mt-3 font-body text-sm text-muted-foreground">
+          Your booking is confirmed only when Genesis replies and agrees the details with you.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href={prepared.url} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 font-body text-sm text-accent-foreground">
+            Open WhatsApp again <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <button type="button" onClick={copyEnquiry} className="rounded-full border border-border px-5 py-3 font-body text-sm">
+            Copy enquiry
+          </button>
+          <button type="button" onClick={() => { editingRef.current = true; setPrepared(null); }} className="rounded-full border border-border px-5 py-3 font-body text-sm">
+            Edit details
+          </button>
+        </div>
+        <p role="status" className="mt-3 font-body text-sm text-muted-foreground">{copyStatus}</p>
+        <Label htmlFor="enquiry-preview" className="block mt-5 mb-2">Your message</Label>
+        <Textarea id="enquiry-preview" readOnly value={prepared.message} className="min-h-[220px] bg-background font-body text-sm" />
+      </section>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="bg-card rounded-2xl p-8 lg:p-10 border border-border/50"
-    >
-      <h3 className="font-heading text-2xl lg:text-3xl font-semibold text-foreground mb-2">
-        Tell us about your visit
-      </h3>
-      <p className="font-body text-sm text-muted-foreground mb-8 leading-relaxed">
-        Fill in a few details and we'll come back to you with availability, options, and a tailored quote. No obligation — just a conversation.
+    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+      className="bg-card rounded-2xl p-8 lg:p-10 border border-border/50">
+      <h3 className="font-heading text-2xl lg:text-3xl font-semibold text-foreground mb-2">Tell us about your visit</h3>
+      <p className="font-body text-sm text-muted-foreground mb-6 leading-relaxed" id="enquiry-help">
+        Choose your visit type and preferred dates. We’ll prepare a WhatsApp message so you can ask about availability and pricing.
+        Dates are requests; your booking is confirmed only after Genesis replies.
       </p>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form ref={formRef} onSubmit={handleSubmit} noValidate aria-describedby="enquiry-help" className="space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="space-y-2">
-            <Label className="font-body text-sm text-foreground">Your name</Label>
-            <Input
-              required
-              placeholder="Full name"
-              value={form.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              className="bg-background border-border/50 font-body rounded-xl h-12"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label className="font-body text-sm text-foreground">WhatsApp / phone number</Label>
-            <Input
-              required
-              placeholder="+256..."
-              value={form.phone}
-              onChange={(e) => handleChange('phone', e.target.value)}
-              className="bg-background border-border/50 font-body rounded-xl h-12"
-            />
-          </div>
+          <Field field="enquiry-name" label="Your name (required)" error={errors.name}>
+            <Input {...fieldProps('name')} required autoComplete="name" maxLength={120} placeholder="Full name" className={inputClass} />
+          </Field>
+          <Field field="enquiry-phone" label="WhatsApp / phone number (required)" error={errors.phone}>
+            <Input {...fieldProps('phone')} required type="tel" autoComplete="tel" maxLength={30} placeholder="+256 777 979 994" className={inputClass} />
+          </Field>
         </div>
-
-        <div className="space-y-2">
-          <Label className="font-body text-sm text-foreground">What brings you to Genesis?</Label>
-          <Select
-            required
-            value={form.purpose}
-            onValueChange={(val) => handleChange('purpose', val)}
-          >
-            <SelectTrigger className="bg-background border-border/50 font-body rounded-xl h-12">
-              <SelectValue placeholder="Select one..." />
+        <Field field="enquiry-purpose" label="What brings you to Genesis? (required)" error={errors.purpose}>
+          <Select name="purpose" required value={form.purpose} onValueChange={value => handleChange('purpose', value)}>
+            <SelectTrigger id="enquiry-purpose" aria-invalid={Boolean(errors.purpose)}
+              aria-describedby={errors.purpose ? 'enquiry-purpose-error' : undefined} className={inputClass}>
+              <SelectValue placeholder="Select a visit type..." />
             </SelectTrigger>
             <SelectContent>
-              {purposes.map((p) => (
-                <SelectItem key={p} value={p}>{p}</SelectItem>
-              ))}
+              {purposes.map(item => <SelectItem key={item} value={item}>{item}</SelectItem>)}
             </SelectContent>
           </Select>
-        </div>
-
+        </Field>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="space-y-2">
-            <Label className="font-body text-sm text-foreground">Preferred date or range</Label>
-            <Input
-              placeholder="e.g. March 15-17"
-              value={form.preferred_date}
-              onChange={(e) => handleChange('preferred_date', e.target.value)}
-              className="bg-background border-border/50 font-body rounded-xl h-12"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label className="font-body text-sm text-foreground">Number of guests (approx.)</Label>
-            <Input
-              placeholder="e.g. 20"
-              value={form.guest_count}
-              onChange={(e) => handleChange('guest_count', e.target.value)}
-              className="bg-background border-border/50 font-body rounded-xl h-12"
-            />
-          </div>
+          <Field field="enquiry-arrival" label={form.purpose === 'Accommodation' ? 'Arrival date (optional)' : 'Visit date (optional)'} error={errors.arrival}>
+            <Input {...fieldProps('arrival')} type="date" min={today} className={inputClass} />
+          </Field>
+          {form.purpose === 'Accommodation' && (
+            <Field field="enquiry-departure" label="Departure date (optional)" error={errors.departure}>
+              <Input {...fieldProps('departure')} type="date" min={form.arrival || today} className={inputClass} />
+            </Field>
+          )}
+          <Field field="enquiry-guest_count" label="Number of guests (optional)" error={errors.guest_count}>
+            <Input {...fieldProps('guest_count')} type="number" min="1" step="1" inputMode="numeric" placeholder="e.g. 2" className={inputClass} />
+          </Field>
         </div>
-
-        <div className="space-y-2">
-          <Label className="font-body text-sm text-foreground">Anything else we should know? (optional)</Label>
-          <Textarea
-            placeholder="Special requests, dietary needs, event details..."
-            value={form.notes}
-            onChange={(e) => handleChange('notes', e.target.value)}
-            className="bg-background border-border/50 font-body rounded-xl min-h-[100px]"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={!form.name || !form.phone || !form.purpose}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Continue to WhatsApp
-          <MessageCircle className="w-4 h-4" />
+        <Field field="enquiry-notes" label="Anything else we should know? (optional)" error={errors.notes}>
+          <Textarea {...fieldProps('notes')} maxLength={2000} placeholder="Special requests, dietary needs, event details..."
+            className="bg-background border-border/50 font-body rounded-xl min-h-[100px]" />
+        </Field>
+        {Object.keys(errors).length > 0 && <p role="alert" className="font-body text-sm text-destructive">Please correct the highlighted details before continuing.</p>}
+        <button type="submit"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-accent text-accent-foreground font-body text-sm font-medium hover:bg-accent/90 transition-colors">
+          Continue to WhatsApp <MessageCircle className="w-4 h-4" aria-hidden="true" />
         </button>
         <p className="font-body text-xs leading-relaxed text-muted-foreground">
-          We’ll prepare your message in WhatsApp. Review it there and tap send to submit your enquiry.
+          Review the prepared message in WhatsApp and tap Send to submit your enquiry.
         </p>
       </form>
     </motion.div>
   );
+}
+
+export default function BookingForm() {
+  const [searchParams] = useSearchParams();
+  const purpose = searchParams.get('purpose') || '';
+  return <BookingEnquiryForm key={searchParams.toString()} enquiry={searchParams.get('enquiry') || ''}
+    purpose={purposes.includes(purpose) ? purpose : ''} />;
 }
